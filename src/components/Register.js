@@ -9,15 +9,10 @@ function Register({ setToken }) {
     async function handleSubmit(event) {
         event.preventDefault();
         const user = { username, password };
-        /*
-          {
-            username: 'username value',
-            password: 'password value'
-          }
-        */
+        
 
         const results = await registerUser(user);
-
+    
         if (results.success) {
             setToken(results.data.token);
             window.localStorage.setItem("token", results.data.token)
@@ -26,7 +21,8 @@ function Register({ setToken }) {
     }
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form className='register' onSubmit={handleSubmit}>
+        <h1>Register</h1>
             <input
                 type='text'
                 placeholder='Enter Username'
@@ -37,7 +33,7 @@ function Register({ setToken }) {
                 placeholder='Enter Password'
                 onChange={(event) => setPassword(event.target.value)}
             />
-            <button type='submit'>Submit</button>
+            <button className='register-form' type='submit'>Sign Up</button>
         </form>
     )
 }
