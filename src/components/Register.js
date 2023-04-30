@@ -21,7 +21,8 @@ function Register({ setToken }) {
     }
 
     return (
-        <form className='register' onSubmit={handleSubmit}>
+        <div className='register'>
+        <form onSubmit={handleSubmit}>
         <h1>Register</h1>
             <input
                 type='text'
@@ -35,6 +36,7 @@ function Register({ setToken }) {
             />
             <button className='register-form' type='submit'>Sign Up</button>
         </form>
+        </div>
     )
 }
 

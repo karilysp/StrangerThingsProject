@@ -1,36 +1,67 @@
 import React from 'react';
 import { Link } from 'react-router-dom'
 
+
+
  
 
-function Posts({ posts }) {
-   
-
+function Posts ({ posts, token }) {
+  
+    
     return (
         <>
+        <h1 className='posts'>Posts</h1>
+            {token === null ? '' : <Link className="add-post"to='/create-post'>(Add Post)</Link>}
+            <div>
+                
+                <button className='search' onClick={event => window.location.href = '/Search'}>Search</button>
+
+            </div>
+       
+                
+     
             
-            
-            <h1>Posts <Link to='/create-post'>Add Post</Link></h1>
-            
-            
+            <div>
                 {posts && posts.map((post) => {
                     return (
                         <div
                         key={post._id}
                         className= {post.isAuthor ? "myPost" : 'singlePost'}>
-                            <h3>{post.title}</h3>
+                            <h3 className='post-title'>{post.title}</h3>
                             <p>{post.description}</p>
-                            <p>Price: {post.price}</p>
-                            <p>Date Posted: {post.updatedAt}</p>
-                            <p>Author: {post.author.username}</p>
-                            {post.isAuthor ? <button>Edit</button> :null}
-                            {post.isAuthor ? <button>Delete</button> :null}
+                            <p><b>Price:</b> {post.price}</p>
+                            <p><b>Date Posted:</b> {post.updatedAt}</p>
+                            <p><b>Author:</b> {post.author.username}</p>
+                            <Link className='edit-button' to={`/edit-post/${post._id}`}><button>Edit</button></Link>
+
+                           
+                           <div>
+                            {token === null ? '' : <div>
+                                {post.isAuthor === false ? <Link to="/Message">
+                                    <button className="messageButton" onClick={() => handleMessage(post._id)}>Message</button>
+                                </Link> : ''
+                                }
+                                        
+                            </div>
+                           
+                            }
+                                
                        </div> 
-                    )
-                })
-            }
+                   
+                    
+                    
+                    
+                    </div> 
+                              
+                 ) })
+                 
+                }   
+                   
+            </div>
         </>
-    );
+        
+                    );
+                    
 }
 
 

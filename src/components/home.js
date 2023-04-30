@@ -1,11 +1,10 @@
 import React from "react";
 
-function Home ({username}) {
+const Home = ({user}) => {
     return (
-        <div>
-            <h1>Welcome to Stranger's Things!</h1>
-            <h2>Logged in as {`${username}`}</h2>
-            <button onClick={event => window.location.href='/profile'}>View Profile</button>
+        <div className="home">
+            <h1 className="home-title">Welcome to Stranger's Things!</h1>
+            <button className="home-button"  onClick={event => window.location.href='/Login'}>Log In</button>
 
         </div>
     )

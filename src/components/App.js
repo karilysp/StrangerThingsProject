@@ -1,21 +1,32 @@
 import React, { useState, useEffect } from 'react';
-import { Routes, Route, Link } from 'react-router-dom';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import { 
     Register,
     Posts,
     Login,
     CreatePost, 
     Profile,
-    Home
+    Home,
+    Message,
+    Search,
+    EditPost,
+    Nav
  } from './';
 import { fetchPosts } from '../ajax-requests'
+import { myData } from '../ajax-requests'
 
 
 
-function App() {
+export function App() {
     const [token, setToken] = useState('');
     const [posts, setPosts] = useState([]);
-    
+    const [user, setUser] = useState({});
+    const [LoggedIn, setLoggedIn]= useState(false);
+
+    const navigate= useNavigate();
+
+
+  
 
     function tokenCheck() {
         if (window.localStorage.getItem('token')) {
@@ -24,20 +35,20 @@ function App() {
         }
     }
 
-  async  function getPosts () {
+    async  function getPosts () {
         const results =await fetchPosts();
         if (results.success) {
             setPosts(results.data.posts)
         }
     }
 
-//   function Nav ({ setToken }) {
 
-//     function logout () {
-//         setToken('');
-//         window.localStorage.removeItem("token")
-//     }
-//   }
+    async function getMyData() {
+        const results = await myData(token);
+        if (results.success) {
+            setUser(results.data);
+        }
+    }
 
     useEffect(() => {
         tokenCheck();
@@ -45,39 +56,27 @@ function App() {
 
     useEffect (() => {
         getPosts();
-        // if (token){
-        //     myData();
-        // }
+        if (token){
+            getMyData();
+            setLoggedIn(true);
+        }
     }, [token])
 
-
-    const logout = () => {
-        localStorage.clear();
-        
-    }
 
     return (
         <div>
            
-            <nav setToken={setToken}>
-                <h1 className='title'>Stranger's Things</h1>
-            <ul>
-                <li><Link to='/home'>Home</Link></li>
-                <li> <Link to='/posts'>Posts </Link></li>
-                <li><Link to='/profile'>Profile</Link></li> 
-                <li><button onClick={logout}>Log Out</button></li>
-                </ul>
-
-                {/* fix!!!!!!!!!! */}
-            </nav>
+            <Nav 
+            setToken={setToken}
+            setLoggedIn={setLoggedIn}
+            LoggedIn={LoggedIn}
+            />
+    
             <Routes>
-             <Route
-             path='/'
-             element= {<Login/>}
-             />
+            
                 <Route
                     path='/posts'
-                    element={<Posts posts={posts} />}
+                    element={<Posts posts={posts} Message={Message} />}
                 />
              <Route
                     path='/register'
@@ -85,7 +84,7 @@ function App() {
              />
             <Route
                     path='/login'
-                    element ={<Login setToken={token} /> }
+                    element ={<Login setToken={setToken} navigate={navigate} /> }
             />
             <Route
                     path= '/create-post'
@@ -93,15 +92,28 @@ function App() {
             />
                 <Route
                     path='/profile'
-                    element={<Profile token={token} posts={posts} />}
+                    element={<Profile token={token} posts={posts}  />}
                 />
                 <Route
                     path='/home'
                     element={<Home />}
                 />
+                <Route
+                    path='/message'
+                    element={<Message />}
+                />
+                <Route
+                    path='/search'
+                    element={<Search />}
+                />
+                <Route
+                    path='/edit-post/:postId'
+                    element={<EditPost posts={posts} token={token}  getPosts={getPosts}/>}
+                />
+               
             </Routes>
         </div>
-    )
+    );
 }
 
 export default App;

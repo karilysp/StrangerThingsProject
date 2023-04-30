@@ -1,69 +1,51 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import { myData, deletePost, handleMessage } from '../ajax-requests'
+import {  useNavigate } from 'react-router-dom'
 
 
-const Profile = ({ token, posts, BASE_URL }) => {
+const Profile = ({ posts, postMessage }) => {
 
-    
+  const navigate= useNavigate();    
 
+  const [message, setMessage] = useState('')
 
-    const myData = async () => {
-        try {
-            const res = await fetch(`${BASE_URL}/users/me`, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-            const data = await res.json();
-            console.log(data)
-            setPosts(results.data.posts);
-            
-        } catch (error) {
-            console.log(error)
-        }
+    const handleDelete = async (postId) => {
+        const deleted = await deletePost(postId)
+        return deleted;
+  
     }
 
-    const deletePost = async (id) => {
-        try {
-            const response = await fetch(`${BASE_URL}/posts/${id}`, {
-                method: "DELETE",
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-
-            const deletedPost = await response.json();
-            console.log(deletedPost);
-        } catch (error) {
-            console.log('err'.err);
-        }
-    };
-
-    const handleDelete = async (id) => {
-        await deletePost(id)
-        myData()
+    async function handleMessage(postId) {
+        const result = await postMessage ({postId, message})
+       console.log('message', result)
+        setMessage();
     }
 
-    useEffect(() => {
-        myData();
+    const handleSubmit = async (event) => {
+        if (results.success) {
+            navigate('/profile')
+        }
+        handleMessage(posts._id);
 
-    }, []);
+    }
+
+   
+
 
     return (
      <>
         <div>
             {posts && posts?.map((post) => {
 
-            //     return post.active
-            // }).map((post, i) => {
+            
                 return (
-                    <div className="posts_info" key={post._id}>
+                    <div className="profile" key={post._id}>
                         <h2 className="postTitle" >Title: {post.title}</h2>
                         <h2 className="postPrice">Price: ${post.price}</h2>
                         <h2 className="postDescription" >Description: {post.description}</h2>
+                        
 
-                        <div className="myMessages">
+                        <div onSubmit={handleSubmit} className="myMessages">
                             {posts.messages?.map((message) => {
                                 return (
                                     <div key={message._id}>
@@ -77,7 +59,7 @@ const Profile = ({ token, posts, BASE_URL }) => {
                         </div>
 
 
-                        <div>{post.active === true ? <button className="deleteButton" onClick={() => handleDelete(post._id)} >Delete</button> : ''}
+                        <div>{post.active === true ? <button className="deleteButton" onClick={() => handleDelete(post._id)}>Delete</button> : ''}
                         </div>
                     </div>
                 )

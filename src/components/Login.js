@@ -1,26 +1,27 @@
 import React, { useState } from 'react';
-import { Routes, Route, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { login } from '../ajax-requests'
 
 
-function Login ({setToken}) {
+
+function Login ({ setToken, navigate }) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
-
+   
+    
     async function handleSubmit(event) {
         event.preventDefault();
         const user = { username, password };
         
-
+        
         const results = await login(user);
-
+        
         if (results.success) {
             setToken(results.data.token);
             window.localStorage.setItem("token", results.data.token)
-            alert.alert ('Thanks for logging in to our service.')
+            window.alert ('Thanks for logging in to our service.')
             navigate('/posts');
-
            
         }
 
