@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 
  
 
-function Posts ({ posts, token }) {
+function Posts ({ posts, token, handleMessage}) {
   
     
     return (
